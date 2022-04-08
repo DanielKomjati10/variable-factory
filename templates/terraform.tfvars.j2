@@ -1,0 +1,14 @@
+aws_groups_data = {
+  {% for group in policies %}
+  {{ group["GroupName"].replace("-", "_").lower() }} = {
+    name     = "{{ group["GroupName"] }}"
+    path     = "/"
+    unique_policies = []
+    policies = [{% for policy in group["Policies"] %}
+      {
+        name = "{{ policy["PolicyName"] }}"
+        arn  = "{{ policy["PolicyArn"] }}"
+      },{% endfor %}
+    ]
+  }{% endfor %}
+}
